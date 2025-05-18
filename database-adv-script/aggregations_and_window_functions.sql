@@ -59,3 +59,20 @@ SELECT
     ROUND((pbc.booking_count / tb.total) * 100, 2) AS booking_percentage
 FROM property_booking_counts pbc, total_bookings tb
 ORDER BY booking_rank;
+
+-- Query 3: Assign a unique row number to each booking per user (recent 30 days), ordered by start date
+SELECT
+    b.id AS booking_id,
+    u.id AS user_id,
+    u.name AS user_name,
+    b.start_date,
+    b.end_date,
+    -- ROW_NUMBER() gives a unique number to each booking for a user, ordered by start_date
+    ROW_NUMBER() OVER (
+        PARTITION BY b.user_id
+        ORDER BY b.start_date
+    ) AS booking_sequence
+FROM bookings b
+JOIN users u ON b.user_id = u.id
+WHERE b.start_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+ORDER BY u.id, booking_sequence;
