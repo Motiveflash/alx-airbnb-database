@@ -1,5 +1,5 @@
 -- ============================
--- Database Schema for Booking Platform
+-- Database Schema for Airbnb Clone
 -- ============================
 
 -- USERS
